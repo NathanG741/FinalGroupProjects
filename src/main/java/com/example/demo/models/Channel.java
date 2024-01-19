@@ -1,7 +1,6 @@
 package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -15,7 +14,7 @@ public class Channel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long channelId;
 
-    @Column(name = "channelname", nullable = false)
+    @Column(name = "channel_name", nullable = false, unique = true)
     private String channelName;
     @Column(name = "accessible", nullable = false)
     private Boolean accessible;
@@ -28,6 +27,7 @@ public class Channel {
 
     @JsonBackReference
     @ManyToOne
+//    @JoinColumn(name = "workspaceId")
     private Workspace workspace;
 
     @JsonManagedReference

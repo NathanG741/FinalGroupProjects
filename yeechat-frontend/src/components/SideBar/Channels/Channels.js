@@ -6,13 +6,10 @@ import {getChannelsFromWorkspace, createChannelInWorkspace} from "../../../api/c
 import { FaCaretDown } from "react-icons/fa";
 import { MdAddToHomeScreen } from "react-icons/md";
 
-const userId = sessionStorage.getItem('userId');
-// const workspaceId = sessionStorage.getItem('workspaceId');
-
-const Channels = (props) => {
+const Channels = () => {
     const [modalOpenState, setModalOpenState] = useState(false);
     const [channelAddState, setChannelAddState] = useState({ name: ''});
-    const [isLoadingState, setLoadingState] = useState(false);
+    const [isLoadingState] = useState(false);
     const [channels, setChannels] = useState([]);
     const [channelMap, setChannelMap] = useState({});
 
@@ -41,7 +38,7 @@ const Channels = (props) => {
                 console.error('Error fetching channels:', error);
             });
     }
-
+        // worksoace to update the channel
     useEffect(() => {
         const handleWorkspaceChange = () => {
             refreshChannels();
@@ -113,10 +110,13 @@ const Channels = (props) => {
         });
     }
 
-    const handleChannelClick = (channelId) => {
-        console.log(`Redirect to channel ${channelId}`);
-        sessionStorage.setItem('channelId', channelId)
+    const handleChannelClick = (channelId, channelName) => {
+        console.log(`Redirect to channel (${channelId}) ${channelName}`);
+        sessionStorage.setItem('channelId', channelId);
+        sessionStorage.setItem('channelName', channelName);
         displayMessages(channelId);
+        const event = new Event('channelSelect');
+        window.dispatchEvent(event);
     };
 
     const displayMessages = (channelId) => {
@@ -159,7 +159,7 @@ const Channels = (props) => {
     }
 
     return <> <Menu.Menu style={{ marginTop: '20px' }}>
-        <Menu.Item style={{fontSize : '18px'}}>
+        <Menu.Item style={{fontSize : '2rem'}}>
             <span>
                 {/*<Icon name="exchange" /> Channels*/}
                 {/*<GrChannel /> Channels*/}
@@ -168,7 +168,7 @@ const Channels = (props) => {
             ({channels.length})
         </Menu.Item>
         {channels.map(channel => (
-            <Menu.Item key={channel.channelId} onClick={() => handleChannelClick(channel.channelId)}>
+            <Menu.Item key={channel.channelId} onClick={() => handleChannelClick(channel.channelId, channel.channelName)}>
                 {channel.channelName}
             </Menu.Item>
         ))}
@@ -180,7 +180,7 @@ const Channels = (props) => {
         </Menu.Item>
     </Menu.Menu>
         <Modal open={modalOpenState} onClose={closeModal}>
-            <Modal.Header>
+            <Modal.Header style={{fontSize : '2rem'}}>
                 Create Channel
             </Modal.Header>
             <Modal.Content>
